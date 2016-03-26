@@ -1,0 +1,22 @@
+{
+  "name": "polarclock",
+  "description": "",
+  "main": "index.html",
+  "authors": [
+    "Mickey"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.1"
+  }
+}
