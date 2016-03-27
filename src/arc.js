@@ -4,7 +4,7 @@ function Arc(outerRadius,arcWidth,color,_ctx){
     this.outerRadius = outerRadius;
     this.arcWidth = arcWidth;
     this.innerRadius = this.outerRadius - this.arcWidth;
-    this.arcStartInDegree = 1;
+    this.arcStartInDegree = 0;
     this._color = color;
     // Rounded corners properties
     this.cornerSize = 3;
