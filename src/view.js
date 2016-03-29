@@ -37,6 +37,7 @@ View.prototype._bindActions = function() {
     this._model.on('mChange', this._drawMinuteArc.bind(this));
     this._model.on('hChange', this._drawHourArc.bind(this));
     this._model.on('dateChange', this._drawDateArc.bind(this));
+    this._model.on('dayChange', this._drawDayArc.bind(this));
 };
 
 // Redraw the clock
@@ -50,11 +51,13 @@ View.prototype._redraw = function() {
     this._minuteArc = new Arc(210, 25, 'orange', this.ctx);
     this._hourArc = new Arc(180, 25, 'gold', this.ctx);
     this._dateArc = new Arc(150, 25, 'purple', this.ctx);
+    this._dayArc = new Arc(120, 25, 'fuchsia', this.ctx);
     this.canvasRefresh();
     this._drawSecondArc();
     this._drawMinuteArc();
     this._drawHourArc();
     this._drawDateArc();
+    this._drawDayArc();
 };
 
 //// DRAW TIME AS ARC //////////////////////////////////////////////////////////////////////////////
@@ -83,6 +86,11 @@ View.prototype._drawHourArc = function() {
 View.prototype._drawDateArc = function() {
     var dateInDegree = this._model.getDateInDegree();
     this._dateArc.drawArc(dateInDegree);
+};
+
+View.prototype._drawDayArc = function() {
+    var dayInDegree = this._model.getDayInDegree();
+    this._dayArc.drawArc(dayInDegree);
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

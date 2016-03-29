@@ -171,6 +171,12 @@ Model.prototype.getDateInDegree = function () {
     var dateInDegree = actualDate * (360 / (daysMax * 24 * 60));
     return dateInDegree;
 };
+
+Model.prototype.getDayInDegree = function () {
+    var actualDay = this.getDayInMin();
+    var dayInDegree = actualDay * (360 / (7 * 24 * 60));
+    return dayInDegree;
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
