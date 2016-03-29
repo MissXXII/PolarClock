@@ -3,7 +3,7 @@ function View(model) {
     this._model = model;
     this.ctx = $('#canvas')[0].getContext('2d');
     // All the DOM elements to get
-    this._elements = ['hour', 'minute', 'second', 'millisecond'];
+    this._elements = ['hour', 'minute', 'second'];
     this._getElements();
     this._init();
     this._bindActions();
@@ -28,36 +28,40 @@ View.prototype._getElements = function() {
 // What must I do when model changes?
 View.prototype._bindActions = function() {
 
-    this._model.on('sChange', this._drawSecond.bind(this));
-    this._model.on('mChange', this._drawMinute.bind(this));
-    this._model.on('hChange', this._drawHour.bind(this));
+    this._model.on('sChange', this._drawSeconds.bind(this));
+    this._model.on('mChange', this._drawMinutes.bind(this));
+    this._model.on('hChange', this._drawHours.bind(this));
 
     this._model.on('tic', this.canvasRefresh.bind(this));
-    this._model.on('sChange', this._drawSecondArc.bind(this));
-    this._model.on('mChange', this._drawMinuteArc.bind(this));
-    this._model.on('hChange', this._drawHourArc.bind(this));
+    this._model.on('sChange', this._drawSecondsArc.bind(this));
+    this._model.on('mChange', this._drawMinutesArc.bind(this));
+    this._model.on('hChange', this._drawHoursArc.bind(this));
     this._model.on('dateChange', this._drawDateArc.bind(this));
     this._model.on('dayChange', this._drawDayArc.bind(this));
+    this._model.on('monthChange', this._drawMonthArc.bind(this));
+
 };
 
 // Redraw the clock
 View.prototype._redraw = function() {
 
-    this._drawSecond();
-    this._drawMinute();
-    this._drawHour();
+    this._drawSeconds();
+    this._drawMinutes();
+    this._drawHours();
 
-    this._secondArc = new Arc(240, 25, 'red', this.ctx);
-    this._minuteArc = new Arc(210, 25, 'orange', this.ctx);
-    this._hourArc = new Arc(180, 25, 'gold', this.ctx);
-    this._dateArc = new Arc(150, 25, 'purple', this.ctx);
-    this._dayArc = new Arc(120, 25, 'fuchsia', this.ctx);
+    this._secondsArc = new Arc(240, 25, 'red', this.ctx);
+    this._minutesArc = new Arc(210, 25, 'orange', this.ctx);
+    this._hoursArc = new Arc(180, 25, 'gold', this.ctx);
+    this._dateArc = new Arc(140, 25, 'purple', this.ctx);
+    this._dayArc = new Arc(110, 25, 'fuchsia', this.ctx);
+    this._monthArc = new Arc(80, 25, 'pink', this.ctx);
     this.canvasRefresh();
-    this._drawSecondArc();
-    this._drawMinuteArc();
-    this._drawHourArc();
+    this._drawSecondsArc();
+    this._drawMinutesArc();
+    this._drawHoursArc();
     this._drawDateArc();
     this._drawDayArc();
+    this._drawMonthArc();
 };
 
 //// DRAW TIME AS ARC //////////////////////////////////////////////////////////////////////////////
@@ -68,19 +72,19 @@ View.prototype.canvasRefresh = function() {
     this.ctx.rotate(-90 * Math.PI / 180);
 };
 
-View.prototype._drawSecondArc = function() {
-    var secondInDegree = this._model.getSecondInDegree();
-    this._secondArc.drawArc(secondInDegree);
+View.prototype._drawSecondsArc = function() {
+    var secondsInDegree = this._model.getSecondsInDegree();
+    this._secondsArc.drawArc(secondsInDegree);
 };
 
-View.prototype._drawMinuteArc = function() {
-    var minuteInDegree = this._model.getMinuteInDegree();
-    this._minuteArc.drawArc(minuteInDegree);
+View.prototype._drawMinutesArc = function() {
+    var minutesInDegree = this._model.getMinutesInDegree();
+    this._minutesArc.drawArc(minutesInDegree);
 };
 
-View.prototype._drawHourArc = function() {
-    var hourInDegree = this._model.getHourInDegree();
-    this._hourArc.drawArc(hourInDegree);
+View.prototype._drawHoursArc = function() {
+    var hoursInDegree = this._model.getHoursInDegree();
+    this._hoursArc.drawArc(hoursInDegree);
 };
 
 View.prototype._drawDateArc = function() {
@@ -91,6 +95,11 @@ View.prototype._drawDateArc = function() {
 View.prototype._drawDayArc = function() {
     var dayInDegree = this._model.getDayInDegree();
     this._dayArc.drawArc(dayInDegree);
+};
+
+View.prototype._drawMonthArc = function() {
+    var monthInDegree = this._model.getMonthInDegree();
+    this._monthArc.drawArc(monthInDegree);
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,30 +114,30 @@ View.prototype._drawDiv = function(divWidth, color, time) {
     return div;
 };
 
-View.prototype._drawSecond = function() {
-    var second = this._model.getSecondInMls();
+View.prototype._drawSeconds = function() {
+    var seconds = this._model.getSecondsInMls();
     $('#drawS').empty();
     var divWidth;
-    divWidth = second * (100 / (60 * 1000));
-    var div = this._drawDiv(divWidth, 'red', (this._model._getSecond()) + ' s');
+    divWidth = seconds * (100 / (60 * 1000));
+    var div = this._drawDiv(divWidth, 'red', (this._model._getSeconds()) + ' s');
     $('#drawS').append(div);
 };
 
-View.prototype._drawMinute = function() {
-    var minute = this._model.getMinuteInMls();
+View.prototype._drawMinutes = function() {
+    var minutes = this._model.getMinutesInMls();
     $('#drawM').empty();
     var divWidth;
-    divWidth = minute * (100 / (60 * 60 * 1000));
-    var div = this._drawDiv(divWidth, 'orange', (this._model._getMinute()) + ' min');
+    divWidth = minutes * (100 / (60 * 60 * 1000));
+    var div = this._drawDiv(divWidth, 'orange', (this._model._getMinutes()) + ' min');
     $('#drawM').append(div);
 };
 
-View.prototype._drawHour = function() {
-    var hour = this._model.getHourInS();
+View.prototype._drawHours = function() {
+    var hours = this._model.getHoursInS();
     $('#drawH').empty();
     var divWidth;
-    divWidth = hour * (100 / (24 * 60 * 60 ));
-    var div = this._drawDiv(divWidth, 'gold', (this._model._getHour()) + ' h');
+    divWidth = hours * (100 / (24 * 60 * 60 ));
+    var div = this._drawDiv(divWidth, 'gold', (this._model._getHours()) + ' h');
     $('#drawH').append(div);
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,26 +146,26 @@ View.prototype._drawHour = function() {
 //// DRAW TIME AS TEXT /////////////////////////////////////////////////////////////////////////////
 
 // Set millissecond to model value
-View.prototype._drawMillisecondInTxt = function() {
-    var millisecond = this._model.getMillisecond();
-    this._millisecond.innerHTML = millisecond;
+View.prototype._drawMillisecondsInTxt = function() {
+    var milliseconds = this._model._getMilliseconds();
+    this._milliseconds.innerHTML = milliseconds;
 };
 
 // Set second to model value
 View.prototype._drawSecondInTxt = function() {
-    var second = this._model.getSecond();
-    this._second.innerHTML = second;
+    var seconds = this._model._getSeconds();
+    this._seconds.innerHTML = second;
 };
 
 // Set minute to model value
 View.prototype._drawMinuteInTxt = function() {
-    var minute = this._model.getMinute();
-    this._minute.innerHTML = minute < 10 ? '0' + minute : minute;
+    var minutes = this._model._getMinutes();
+    this._minutes.innerHTML = minutes < 10 ? '0' + minutes : minutes;
 };
 
 // Set hour to model value
-View.prototype._drawHourInTxt = function() {
-    var hour = this._model.getHour();
-    this._hour.innerHTML = hour < 10 ? '0' + hour : hour;
+View.prototype._drawHoursInTxt = function() {
+    var hours = this._model._getHours();
+    this._hours.innerHTML = hours < 10 ? '0' + hours : hours;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////

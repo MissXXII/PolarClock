@@ -1,14 +1,14 @@
 function Model() {
     EventEmitter.call(this); // Call EventEmitter constructor
     // Model Initialisation
-    this._milliseconds = 0;
-    this._seconds = 0;
-    this._minutes = 0;
-    this._hours = 0;
-    this._date = 0;
-    this._day = 0;
-    this._month = 0;
-    this._year = 0;
+    var _milliseconds = 0;
+    var _seconds = 0;
+    var _minutes = 0;
+    var _hours = 0;
+    var _date = 0;
+    var _day = 0;
+    var _month = 0;
+    var _year = 0;
 }
 
 // EventEmitter inheritance
@@ -23,10 +23,10 @@ Model.prototype.start = function() {
 
 // Init
 Model.prototype.init = function() {
-    this._setMillisecond();
-    this._setSecond();
-    this._setMinute();
-    this._setHour();
+    this._setMilliseconds();
+    this._setSeconds();
+    this._setMinutes();
+    this._setHours();
     this._setDate();
     this._setDay();
     this._setMonth();
@@ -36,10 +36,10 @@ Model.prototype.init = function() {
 // Tic...
 Model.prototype._tic = function() {
     this.emit('tic');
-    this._setMillisecond();
-    this._setSecond();
-    this._setMinute();
-    this._setHour();
+    this._setMilliseconds();
+    this._setSeconds();
+    this._setMinutes();
+    this._setHours();
     this._setDate();
     this._setDay();
     this._setMonth();
@@ -48,19 +48,19 @@ Model.prototype._tic = function() {
 
 
 //// GET TIME IN ITS OWN VALLUE ////////////////////////////////////////////////////////////////////
-Model.prototype._getMillisecond = function() {
+Model.prototype._getMilliseconds = function() {
     return this._milliseconds;
 };
 
-Model.prototype._getSecond = function() {
+Model.prototype._getSeconds = function() {
     return this._seconds;
 };
 
-Model.prototype._getMinute = function() {
+Model.prototype._getMinutes = function() {
     return this._minutes;
 };
 
-Model.prototype._getHour = function() {
+Model.prototype._getHours = function() {
     return this._hours;
 };
 
@@ -83,78 +83,86 @@ Model.prototype._getYear = function() {
 
 
 //// GET TIME IN OSER VALLUES //////////////////////////////////////////////////////////////////////
-Model.prototype.getSecondInMls = function() {
-    var actualS = this._seconds;
-    var actualMls = this._milliseconds;
-    var sInMls =  (actualS * 1000) + actualMls;
+Model.prototype.getSecondsInMls = function() {
+    var currentS = this._getSeconds();
+    var currentMls = this._getMilliseconds();
+    var sInMls =  (currentS * 1000) + currentMls;
     return sInMls;
 };
 
-Model.prototype.getMinuteInMls = function() {
-    var sInMls = this.getSecondInMls();
-    var actualM = this._minutes;
-    var mInMls =  (actualM * 60 * 1000) + sInMls;
+Model.prototype.getMinutesInMls = function() {
+    var sInMls = this.getSecondsInMls();
+    var currentM = this._getMinutes();
+    var mInMls =  (currentM * 60 * 1000) + sInMls;
     return mInMls;
 };
 
-Model.prototype.getMinuteInS = function() {
-    var actualS = this._seconds;
-    var actualM = this._minutes;
-    var mInS = (actualM * 60) + actualS;
+Model.prototype.getMinutesInS = function() {
+    var currentS = this._getSeconds();
+    var currentM = this._getMinutes();
+    var mInS = (currentM * 60) + currentS;
     return mInS;
 };
 
-Model.prototype.getHourInS = function() {
-    var mInS = this.getMinuteInS();
-    var actualH = this._hours;
-    var hInS = (actualH  * 60 * 60) + mInS;
+Model.prototype.getHoursInS = function() {
+    var mInS = this.getMinutesInS();
+    var currentH = this._getHours();
+    var hInS = (currentH  * 60 * 60) + mInS;
     return hInS;
 };
 
-Model.prototype.getHourInMin = function(){
-    var actualMin = this._minutes;
-    var actualH = this._hours;
-    var hInMin = (actualH * 60) + actualMin;
+Model.prototype.getHoursInMin = function(){
+    var currentMin = this._getMinutes();
+    var currentH = this._getHours();
+    var hInMin = (currentH * 60) + currentMin;
     return hInMin;
 };
 
 Model.prototype.getDateInMin = function() {
-    var hInMin = this.getHourInMin();
-    var actualDate = this._date;
-    // a day has 24 hours so if we are the 1st the day is actually passing from 0 to 24h
-    var dateInMin = ((actualDate - 1) * 24 * 60) + hInMin;
+    var hInMin = this.getHoursInMin();
+    var currentDate = this._getDate();
+    // a day has 24 hours so if we are the 1st the day is currently passing from 0 to 24h
+    var dateInMin = ((currentDate - 1) * 24 * 60) + hInMin;
     return dateInMin;
 };
 
+Model.prototype.getDateInH = function() {
+    var currentHours = this._getHours();
+    var currentDate = this._getDate();
+    // a day has 24 hours so if we are the 1st the day is currently passing from 0 to 24h
+    var dateInH = ((currentDate - 1) * 24) + currentHours;
+    return dateInH;
+};
+
 Model.prototype.getDayInMin = function() {
-    var hInMin = this.getHourInMin();
-    var actualDay = this._day;
-    // a day has 24 hours so if we are the 1st the day is actually passing from 0 to 24h
-    var dayInMin = ((actualDay > 0 ? actualDay -= 1 : jour = 6) * 24 * 60) + hInMin;
+    var hInMin = this.getHoursInMin();
+    var currentDay = this._getDay();
+    // a day has 24 hours so if we are the 1st the day is currently passing from 0 to 24h
+    var dayInMin = ((currentDay > 0 ? currentDay -= 1 : jour = 6) * 24 * 60) + hInMin;
     return dayInMin;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //// GET TIME IN DEGREE ////////////////////////////////////////////////////////////////////////////
-Model.prototype.getSecondInDegree = function () {
-    var actualS = this.getSecondInMls();
-    var secondInDegree = actualS * (360 / (60 * 1000));
+Model.prototype.getSecondsInDegree = function () {
+    var currentS = this.getSecondsInMls();
+    var secondInDegree = currentS * (360 / (60 * 1000));
     return secondInDegree;
 };
 
-Model.prototype.getMinuteInDegree = function () {
-    var actualM = this.getMinuteInMls();
-    var minuteInDegree = actualM * (360 / (60 * 60 * 1000));
+Model.prototype.getMinutesInDegree = function () {
+    var currentM = this.getMinutesInMls();
+    var minuteInDegree = currentM * (360 / (60 * 60 * 1000));
     return minuteInDegree;
 };
 
-Model.prototype.getHourInDegree = function () {
-    var actualH = this.getHourInS();
-    var hourInDegree = actualH * (360 / (24 * 60 * 60));
+Model.prototype.getHoursInDegree = function () {
+    var currentH = this.getHoursInS();
+    var hourInDegree = currentH * (360 / (24 * 60 * 60));
     return hourInDegree;
 };
-// Get how many days in the actual month
+// Get how many days in the current month
 Model.prototype.getDaysMaxInMonth = function (year, month) {
     // when Date is created, give it parameters to get the date you want
     // Here we need to know how many days there are in the current month
@@ -165,41 +173,49 @@ Model.prototype.getDaysMaxInMonth = function (year, month) {
 };
 
 Model.prototype.getDateInDegree = function () {
-    var actualDate = this.getDateInMin();
-    // How many days in the actual month
+    var currentDate = this.getDateInMin();
+    // How many days in the current month
     var daysMax = this.getDaysMaxInMonth(this._getYear(),this._getMonth());
-    var dateInDegree = actualDate * (360 / (daysMax * 24 * 60));
+    var dateInDegree = currentDate * (360 / (daysMax * 24 * 60));
     return dateInDegree;
 };
 
 Model.prototype.getDayInDegree = function () {
-    var actualDay = this.getDayInMin();
-    var dayInDegree = actualDay * (360 / (7 * 24 * 60));
+    var currentDay = this.getDayInMin();
+    var dayInDegree = currentDay * (360 / (7 * 24 * 60));
     return dayInDegree;
+};
+
+Model.prototype.getMonthInDegree = function () {
+    var currentDate = this.getDateInH();
+    var currentMonth = this._getMonth();
+    var daysMax = this.getDaysMaxInMonth(this._getYear(),this._getMonth());
+    var monthInDegree = (currentMonth * (360/12) ) + ( currentDate * ( (360/12) / (daysMax*24) ) );
+    return monthInDegree;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //// SETTING TIME //////////////////////////////////////////////////////////////////////////////////
-Model.prototype._setMillisecond = function() {
+Model.prototype._setMilliseconds = function() {
     var newDate = new Date();
     this._milliseconds = newDate.getMilliseconds();
     this.emit('msChange');
 };
 
-Model.prototype._setSecond = function() {
+Model.prototype._setSeconds = function() {
     var newDate = new Date();
     this._seconds = newDate.getSeconds();
     this.emit('sChange');
 };
 
-Model.prototype._setMinute = function() {
+Model.prototype._setMinutes = function() {
     var newDate = new Date();
     this._minutes = newDate.getMinutes();
     this.emit('mChange');
 };
 
-Model.prototype._setHour = function() {
+Model.prototype._setHours = function() {
     var newDate = new Date();
     this._hours = newDate.getHours();
     this.emit('hChange');
