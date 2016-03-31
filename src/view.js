@@ -7,9 +7,8 @@ function View(model) {
     this._getElements();
     this._init();
     this._bindActions();
-
 }
-
+// EventEmitter inheritance
 View.prototype = Object.create(EventEmitter.prototype);
 View.prototype.constructor = View;
 
@@ -27,10 +26,9 @@ View.prototype._getElements = function() {
 
 // What must I do when model changes?
 View.prototype._bindActions = function() {
-
-    this._model.on('sChange', this._drawSeconds.bind(this));
-    this._model.on('mChange', this._drawMinutes.bind(this));
-    this._model.on('hChange', this._drawHours.bind(this));
+     this._model.on('sChange', this._drawSeconds.bind(this));
+     this._model.on('mChange', this._drawMinutes.bind(this));
+     this._model.on('hChange', this._drawHours.bind(this));
 
     this._model.on('tic', this.canvasRefresh.bind(this));
     this._model.on('sChange', this._drawSecondsArc.bind(this));
@@ -39,22 +37,20 @@ View.prototype._bindActions = function() {
     this._model.on('dateChange', this._drawDateArc.bind(this));
     this._model.on('dayChange', this._drawDayArc.bind(this));
     this._model.on('monthChange', this._drawMonthArc.bind(this));
-
 };
 
 // Redraw the clock
 View.prototype._redraw = function() {
-
-    this._drawSeconds();
-    this._drawMinutes();
-    this._drawHours();
+     this._drawSeconds();
+     this._drawMinutes();
+     this._drawHours();
 
     this._secondsArc = new Arc(240, 25, 'red', this.ctx);
     this._minutesArc = new Arc(210, 25, 'orange', this.ctx);
     this._hoursArc = new Arc(180, 25, 'gold', this.ctx);
-    this._dateArc = new Arc(140, 25, 'purple', this.ctx);
-    this._dayArc = new Arc(110, 25, 'fuchsia', this.ctx);
-    this._monthArc = new Arc(80, 25, 'pink', this.ctx);
+    this._dateArc = new Arc(150, 25, 'purple', this.ctx);
+    this._dayArc = new Arc(120, 25, 'fuchsia', this.ctx);
+    this._monthArc = new Arc(90, 25, 'pink', this.ctx);
     this.canvasRefresh();
     this._drawSecondsArc();
     this._drawMinutesArc();
@@ -65,16 +61,19 @@ View.prototype._redraw = function() {
 };
 
 //// DRAW TIME AS ARC //////////////////////////////////////////////////////////////////////////////
+
+// Refresh canvas
 View.prototype.canvasRefresh = function() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.ctx.translate(250, 250);
+    this.ctx.translate(canvas.width / 2, canvas.height / 2);
     this.ctx.rotate(-90 * Math.PI / 180);
 };
 
 View.prototype._drawSecondsArc = function() {
     var secondsInDegree = this._model.getSecondsInDegree();
     this._secondsArc.drawArc(secondsInDegree);
+
 };
 
 View.prototype._drawMinutesArc = function() {
@@ -108,9 +107,7 @@ View.prototype._drawMonthArc = function() {
 
 // how to draw the div
 View.prototype._drawDiv = function(divWidth, color, time) {
-    var div = $('<div>').css('height', '14px').css('width', divWidth + '%').css('background-color', color).css('margin', '1px 0px')
-        .text(time).css('text-align', 'right').css('color', 'white').css('font-family', 'arial').css('padding-right', '2px')
-        .css({'overflow':'hidden' , 'white-space':'nowrap'});
+    var div = $('<div>').attr('class', 'timediv').css('width', divWidth + '%').css('background-color', color).text(time);
     return div;
 };
 
@@ -136,36 +133,8 @@ View.prototype._drawHours = function() {
     var hours = this._model.getHoursInS();
     $('#drawH').empty();
     var divWidth;
-    divWidth = hours * (100 / (24 * 60 * 60 ));
+    divWidth = hours * (100 / (24 * 60 * 60));
     var div = this._drawDiv(divWidth, 'gold', (this._model._getHours()) + ' h');
     $('#drawH').append(div);
-};
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//// DRAW TIME AS TEXT /////////////////////////////////////////////////////////////////////////////
-
-// Set millissecond to model value
-View.prototype._drawMillisecondsInTxt = function() {
-    var milliseconds = this._model._getMilliseconds();
-    this._milliseconds.innerHTML = milliseconds;
-};
-
-// Set second to model value
-View.prototype._drawSecondInTxt = function() {
-    var seconds = this._model._getSeconds();
-    this._seconds.innerHTML = second;
-};
-
-// Set minute to model value
-View.prototype._drawMinuteInTxt = function() {
-    var minutes = this._model._getMinutes();
-    this._minutes.innerHTML = minutes < 10 ? '0' + minutes : minutes;
-};
-
-// Set hour to model value
-View.prototype._drawHoursInTxt = function() {
-    var hours = this._model._getHours();
-    this._hours.innerHTML = hours < 10 ? '0' + hours : hours;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////

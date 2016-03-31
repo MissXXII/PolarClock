@@ -1,14 +1,14 @@
 function Model() {
     EventEmitter.call(this); // Call EventEmitter constructor
     // Model Initialisation
-    var _milliseconds = 0;
-    var _seconds = 0;
-    var _minutes = 0;
-    var _hours = 0;
-    var _date = 0;
-    var _day = 0;
-    var _month = 0;
-    var _year = 0;
+    this._milliseconds = 0;
+    this._seconds = 0;
+    this._minutes = 0;
+    this._hours = 0;
+    this._date = 0;
+    this._day = 0;
+    this._month = 0;
+    this._year = 0;
 }
 
 // EventEmitter inheritance
@@ -17,20 +17,8 @@ Model.prototype.constructor = Model;
 
 // Start the clock
 Model.prototype.start = function() {
-    this.init();
-    this._tic();
-};
-
-// Init
-Model.prototype.init = function() {
-    this._setMilliseconds();
-    this._setSeconds();
-    this._setMinutes();
-    this._setHours();
-    this._setDate();
-    this._setDay();
-    this._setMonth();
     this._setYear();
+    this._tic();
 };
 
 // Tic...
@@ -47,7 +35,7 @@ Model.prototype._tic = function() {
 };
 
 
-//// GET TIME IN ITS OWN VALLUE ////////////////////////////////////////////////////////////////////
+//// GET TIME IN IT'S OWN VALLUE ////////////////////////////////////////////////////////////////////
 Model.prototype._getMilliseconds = function() {
     return this._milliseconds;
 };

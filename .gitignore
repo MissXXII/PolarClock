@@ -1,3 +1,5 @@
 /node_modules
-/Users/Mickey/Sites/PolarClock/bower_components/jquery/src
+/bower_components/jquery/src
 /research
+/bower_components/circletype.js
+/bower_components/letteringjs

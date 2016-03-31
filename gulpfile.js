@@ -53,7 +53,7 @@ gulp.task('serve', ['js'], function() {
     proxyOptions.route = '/polarclock';
     browserSync({
         open:true,
-        port:3000,
+        port:8080,
         server: {
             baseDir: "./",
             middleware: [proxy(proxyOptions)]
@@ -61,4 +61,5 @@ gulp.task('serve', ['js'], function() {
     });
     gulp.watch('src/**/*.js', ['js-watch']);
     gulp.watch("./**/*.html").on('change', browserSync.reload);
+    gulp.watch("./**/*.css").on('change', browserSync.reload);
 });
